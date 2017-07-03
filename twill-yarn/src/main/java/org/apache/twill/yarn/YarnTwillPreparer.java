@@ -44,6 +44,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.twill.api.ClassAcceptor;
 import org.apache.twill.api.Configs;
@@ -405,18 +406,18 @@ final class YarnTwillPreparer implements TwillPreparer {
             //     appMaster.jar
             //     org.apache.twill.internal.appmaster.ApplicationMasterMain
             //     false
-
             int reservedMemoryMB = config.getInt(Configs.Keys.YARN_AM_RESERVED_MEMORY_MB,
                                                  Configs.Defaults.YARN_AM_RESERVED_MEMORY_MB);
             int memory = Resources.computeMaxHeapSize(appMasterInfo.getMemoryMB(), reservedMemoryMB, getMinHeapRatio());
+
             return launcher.prepareLaunch(ImmutableMap.<String, String>of(), localFiles.values(),
                                           createSubmissionCredentials())
               .addCommand(
-                "$JAVA_HOME/bin/java",
+                prepareShellVar("JAVA_HOME") + "/bin/java",
                 "-Djava.io.tmpdir=tmp",
-                "-Dyarn.appId=$" + EnvKeys.YARN_APP_ID_STR,
-                "-Dtwill.app=$" + Constants.TWILL_APP_NAME,
-                "-cp", Constants.Files.LAUNCHER_JAR + ":$HADOOP_CONF_DIR",
+                "-Dyarn.appId=" + prepareShellVar(EnvKeys.YARN_APP_ID_STR),
+                "-Dtwill.app=" + prepareShellVar(Constants.TWILL_APP_NAME),
+                "-cp", Constants.Files.LAUNCHER_JAR + ":" + prepareShellVar("HADOOP_CONF_DIR"),
                 "-Xmx" + memory + "m",
                 extraOptions,
                 TwillLauncher.class.getName(),
@@ -435,6 +436,14 @@ final class YarnTwillPreparer implements TwillPreparer {
     } catch (Exception e) {
       LOG.error("Failed to submit application {}", twillSpec.getName(), e);
       throw Throwables.propagate(e);
+    }
+  }
+
+  private String prepareShellVar(String var) {
+    if (Shell.WINDOWS) {
+      return String.format("{{%s}}", var);
+    } else {
+      return String.format("$%s", var);
     }
   }
 
