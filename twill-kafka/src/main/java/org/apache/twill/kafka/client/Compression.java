@@ -24,7 +24,8 @@ public enum Compression {
 
   NONE,
   GZIP,
-  SNAPPY;
+  SNAPPY,
+  LZ4;
 
   private final String codec;
 

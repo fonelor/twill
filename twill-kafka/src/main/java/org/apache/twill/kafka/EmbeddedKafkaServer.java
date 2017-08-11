@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.twill.internal.kafka;
+package org.apache.twill.kafka;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
@@ -23,7 +23,7 @@ import com.google.common.util.concurrent.AbstractIdleService;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServerStartable;
 import org.I0Itec.zkclient.exception.ZkTimeoutException;
-import org.apache.twill.internal.utils.Networks;
+import org.apache.twill.utils.Networks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

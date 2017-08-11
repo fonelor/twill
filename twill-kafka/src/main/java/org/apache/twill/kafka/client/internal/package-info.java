@@ -18,4 +18,4 @@
 /**
  * This package provides Kafka client implementation.
  */
-package org.apache.twill.internal.kafka.client;
+package org.apache.twill.kafka.client.internal;

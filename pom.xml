@@ -125,6 +125,7 @@
         <module>twill-yarn</module>
         <module>twill-ext</module>
         <module>twill-examples</module>
+        <module>twill-kafka</module>
     </modules>
 
 

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.twill.internal.kafka.client;
+package org.apache.twill.kafka.client.internal;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.AsyncFunction;
@@ -38,6 +38,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * {@link KafkaPublisher} implementation with new kafka api and bootstrap servers
@@ -57,6 +58,7 @@ public class BetterKafkaPublisher implements KafkaPublisher {
     props.put(ProducerConfig.ACKS_CONFIG, Integer.toString(ack.getAck()));
     props.put(ProducerConfig.RETRIES_CONFIG, 3);
     props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
+    props.put(CommonClientConfigs.CLIENT_ID_CONFIG, "twill-logger-" + ThreadLocalRandom.current().nextInt());
     props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, compression.getCodec());
 
     kafkaProducer = new KafkaProducer<>(props,

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.twill.internal.kafka.client;
+package org.apache.twill.kafka.client.internal;
 
 import org.apache.twill.kafka.client.FetchedMessage;
 import org.apache.twill.kafka.client.TopicPartition;
